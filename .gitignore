@@ -1,0 +1,3 @@
+*.pyc
+*.geojson
+test.py
