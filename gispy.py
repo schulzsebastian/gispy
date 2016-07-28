@@ -6,6 +6,14 @@ class Point(object):
 
     def __init__(self, coordinates):
         self.coordinates = coordinates
+        if not self.coordinates:
+            raise AttributeError('Argument not found')
+        elif not isinstance(self.coordinates, list):
+            raise TypeError('Argument is not a list')
+        elif len(self.coordinates) != 2:
+            raise ValueError('Argument is not a pair of coordinates')
+        elif not all(isinstance(_, float) for _ in self.coordinates):
+            raise ValueError('Coordinates are not floats')
 
     def __str__(self):
         return "Point object: %s" % self.coordinates
@@ -17,7 +25,7 @@ class Point(object):
         in_proj = Proj(init="epsg:" + str(in_epsg))
         out_proj = Proj(init="epsg:" + str(out_epsg))
         x, y = self.coordinates[0], self.coordinates[1]
-        return Point([i for i in transform(in_proj, out_proj, x, y)])
+        return Point(list(transform(in_proj, out_proj, x, y)))
 
     def to_geojson(self, **kwargs):
         data = {
