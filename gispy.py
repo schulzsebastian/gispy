@@ -47,3 +47,11 @@ class Point(object):
                 json.dump(data, outfile, indent=4,
                           sort_keys=True, separators=(',', ':'))
         return json.dumps(data)
+
+    def to_text(self, **kwargs):
+        data = ';'.join([str(_) for _ in self.coordinates])
+        path = kwargs.get('path', None)
+        if path:
+            with open(path + '/Point.txt', 'w') as outfile:
+                outfile.write(data)
+        return data
