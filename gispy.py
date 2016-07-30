@@ -1,4 +1,5 @@
 import json
+import csv
 from pyproj import Proj, transform
 
 
@@ -54,4 +55,13 @@ class Point(object):
         if path:
             with open(path + '/Point.txt', 'w') as outfile:
                 outfile.write(data)
+        return data
+
+    def to_csv(self, **kwargs):
+        data = ';'.join([str(_) for _ in self.coordinates])
+        path = kwargs.get('path', None)
+        if path:
+            with open(path + '/Point.csv', 'wb') as outfile:
+                writer = csv.writer(outfile, delimiter=';', quotechar='"')
+                writer.writerow(self.coordinates)
         return data
