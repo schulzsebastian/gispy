@@ -48,7 +48,10 @@ class Point(object):
         if path:
             if not os.path.exists(path):
                 os.makedirs(path)
-            with open(path + '/Point.geojson', 'w') as outfile:
+            filename = kwargs.get('filename', None)
+            if not filename:
+                filename = 'Point'
+            with open(path + '/' + filename + '.geojson', 'w') as outfile:
                 json.dump(data, outfile, indent=4,
                           sort_keys=True, separators=(',', ':'))
         return json.dumps(data)
@@ -57,7 +60,12 @@ class Point(object):
         data = ';'.join([str(_) for _ in self.coordinates])
         path = kwargs.get('path', None)
         if path:
-            with open(path + '/Point.txt', 'w') as outfile:
+            if not os.path.exists(path):
+                os.makedirs(path)
+            filename = kwargs.get('filename', None)
+            if not filename:
+                filename = 'Point'
+            with open(path + '/' + filename + '.txt', 'w') as outfile:
                 outfile.write(data)
         return data
 
@@ -65,7 +73,10 @@ class Point(object):
         data = ';'.join([str(_) for _ in self.coordinates])
         path = kwargs.get('path', None)
         if path:
-            with open(path + '/Point.csv', 'w') as outfile:
+            filename = kwargs.get('filename', None)
+            if not filename:
+                filename = 'Point'
+            with open(path + '/' + filename + '.csv', 'w') as outfile:
                 writer = csv.writer(outfile, delimiter=';', quotechar='"')
                 writer.writerow(self.coordinates)
         return data
@@ -74,9 +85,12 @@ class Point(object):
         w = shapefile.Writer(shapefile.POINT)
         w.point(self.coordinates[0], self.coordinates[1])
         path = kwargs.get('path', None)
+        filename = kwargs.get('filename', None)
+        if not filename:
+            filename = 'Point'
         if path:
-            w.save(path + '/Point')
+            w.save(path + '/' + filename)
         else:
-            w.save('./Point')
+            w.save('./' + filename)
         data = ';'.join([str(_) for _ in self.coordinates])
         return data
