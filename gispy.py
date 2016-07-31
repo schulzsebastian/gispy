@@ -1,5 +1,7 @@
+import os
 import json
 import csv
+import shapefile
 from pyproj import Proj, transform
 
 
@@ -44,6 +46,8 @@ class Point(object):
         }
         path = kwargs.get('path', None)
         if path:
+            if not os.path.exists(path):
+                os.makedirs(path)
             with open(path + '/Point.geojson', 'w') as outfile:
                 json.dump(data, outfile, indent=4,
                           sort_keys=True, separators=(',', ':'))
@@ -61,7 +65,18 @@ class Point(object):
         data = ';'.join([str(_) for _ in self.coordinates])
         path = kwargs.get('path', None)
         if path:
-            with open(path + '/Point.csv', 'wb') as outfile:
+            with open(path + '/Point.csv', 'w') as outfile:
                 writer = csv.writer(outfile, delimiter=';', quotechar='"')
                 writer.writerow(self.coordinates)
+        return data
+
+    def to_shp(self, **kwargs):
+        w = shapefile.Writer(shapefile.POINT)
+        w.point(self.coordinates[0], self.coordinates[1])
+        path = kwargs.get('path', None)
+        if path:
+            w.save(path + '/Point')
+        else:
+            w.save('./Point')
+        data = ';'.join([str(_) for _ in self.coordinates])
         return data
