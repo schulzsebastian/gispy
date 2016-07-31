@@ -52,7 +52,7 @@ class PointTestCase(unittest.TestCase):
         with open(self.path + '/' + self.filename + '.csv', 'r') as infile:
             reader = csv.reader(infile, delimiter=';', quotechar='"')
             for row in reader:
-                file_coords = [float(_) for _ in row]    
+                file_coords = [float(_) for _ in row]
         self.assertEqual(file_coords, self.point.coords())
         self.assertEqual(return_coords, self.point.coords())
 
