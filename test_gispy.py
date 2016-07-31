@@ -58,8 +58,11 @@ class PointTestCase(unittest.TestCase):
 
     def test_to_shp(self):
         to_shp = self.point.to_shp(path=self.path, filename=self.filename)
-        point = Point([float(_) for _ in to_shp.split(';')])
-        self.assertEqual(point.coords(), self.point.coords())
+        return_coords = [float(_) for _ in to_shp.split(';')]
+        shp = shapefile.Reader(self.path + '/' + self.filename)
+        geom_type = shp.shapes()[0].shapeType
+        self.assertEqual(return_coords, self.point.coords())
+        self.assertEqual(geom_type, 1)
 
 if __name__ == '__main__':
     unittest.main()
