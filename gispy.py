@@ -73,6 +73,8 @@ class Point(object):
         data = ';'.join([str(_) for _ in self.coordinates])
         path = kwargs.get('path', None)
         if path:
+            if not os.path.exists(path):
+                os.makedirs(path)
             filename = kwargs.get('filename', None)
             if not filename:
                 filename = 'Point'
