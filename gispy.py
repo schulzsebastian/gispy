@@ -22,11 +22,9 @@ class Point(object):
             raise TypeError('Properties are not a dict')
 
     def __str__(self):
-        obj = 'Coordinates: %s\n' % self.coordinates
+        obj = 'Point object\nCoordinates: %s\n' % self.coordinates
         if self.properties:
-            kv = []
-            for k, v in self.properties.iteritems():
-                kv.append(': '.join([str(k), str(v)]))
+            kv = [': '.join([k, v]) for k, v in self.properties.iteritems()]
             return obj + '\n'.join(kv)
         return obj
 
@@ -40,7 +38,7 @@ class Point(object):
         in_proj = Proj(init="epsg:" + str(in_epsg))
         out_proj = Proj(init="epsg:" + str(out_epsg))
         x, y = self.coordinates[0], self.coordinates[1]
-        return Point(list(transform(in_proj, out_proj, x, y)))
+        return Point(list(transform(in_proj, out_proj, x, y)), self.properties)
 
     def to_geojson(self, **kwargs):
         data = {
@@ -48,7 +46,7 @@ class Point(object):
             "features": [
                 {
                     "type": "Feature",
-                    "properties": {},
+                    "properties": self.properties,
                     "geometry": {
                         "type": "Point",
                         "coordinates": self.coordinates
