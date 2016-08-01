@@ -7,22 +7,34 @@ from pyproj import Proj, transform
 
 class Point(object):
 
-    def __init__(self, coordinates):
+    def __init__(self, coordinates, properties={}):
         self.coordinates = coordinates
         if not self.coordinates:
-            raise AttributeError('Argument not found')
+            raise AttributeError('Coordinates not found')
         elif not isinstance(self.coordinates, list):
-            raise TypeError('Argument is not a list')
+            raise TypeError('Coordinates are not a list')
         elif len(self.coordinates) != 2:
-            raise ValueError('Argument is not a pair of coordinates')
+            raise ValueError('It is not pair of coordinates')
         elif not all(isinstance(_, float) for _ in self.coordinates):
             raise ValueError('Coordinates are not floats')
+        self.properties = properties
+        if not isinstance(self.properties, dict):
+            raise TypeError('Properties are not a dict')
 
     def __str__(self):
-        return "Point object: %s" % self.coordinates
+        obj = 'Coordinates: %s\n' % self.coordinates
+        if self.properties:
+            kv = []
+            for k, v in self.properties.iteritems():
+                kv.append(': '.join([str(k), str(v)]))
+            return obj + '\n'.join(kv)
+        return obj
 
     def coords(self):
         return self.coordinates
+
+    def props(self):
+        return self.properties
 
     def reproject(self, in_epsg, out_epsg):
         in_proj = Proj(init="epsg:" + str(in_epsg))

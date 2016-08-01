@@ -7,13 +7,15 @@ class PointTestCase(unittest.TestCase):
     def setUp(self):
         self.path = './test'
         self.filename = 'test'
+        self.properties = {'name': 'Punkt', 'wartosc': 3}
         self.in_epsg = 4326
         self.out_epsg = 2180
         self.coords = [10.00, 20.00]
-        self.point = Point(self.coords)
+        self.point = Point(self.coords, self.properties)
 
     def test_coords(self):
         self.assertEqual(self.point.coords(), self.coords)
+        self.assertEqual(self.point.props(), self.properties)
 
     def test_reproject(self):
         reprojected = self.point.reproject(self.in_epsg, self.out_epsg)
