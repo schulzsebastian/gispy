@@ -67,7 +67,13 @@ class Point(object):
         return json.dumps(data)
 
     def to_text(self, **kwargs):
-        data = ';'.join([str(_) for _ in self.coordinates])
+        if self.properties:
+            data = 'coord_x;coord_y;' + \
+                ';'.join([k for k, v in self.properties.iteritems()]) + '\n'
+            data += ';'.join([str(_) for _ in self.coordinates]) + ';'
+            data += ';'.join([v for k, v in self.properties.iteritems()])
+        else:
+            data += ';'.join([str(_) for _ in self.coordinates])
         path = kwargs.get('path', None)
         if path:
             if not os.path.exists(path):
