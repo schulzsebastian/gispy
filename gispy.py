@@ -86,7 +86,13 @@ class Point(object):
         return data
 
     def to_csv(self, **kwargs):
-        data = ';'.join([str(_) for _ in self.coordinates])
+        data = [['coord_x', 'coord_y'], [_ for _ in self.coordinates]]
+        if self.properties:
+            for k, v in self.properties.iteritems():
+                data[0].append(k)
+                data[1].append(v)
+        else:
+            data = [_ for _ in self.coordinates]
         path = kwargs.get('path', None)
         if path:
             if not os.path.exists(path):
@@ -96,7 +102,7 @@ class Point(object):
                 filename = 'Point'
             with open(path + '/' + filename + '.csv', 'w') as outfile:
                 writer = csv.writer(outfile, delimiter=';', quotechar='"')
-                writer.writerow(self.coordinates)
+                writer.writerows(data)
         return data
 
     def to_shp(self, **kwargs):
