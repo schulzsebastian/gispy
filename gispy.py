@@ -55,13 +55,16 @@ class Point(object):
             ]
         }
         path = kwargs.get('path', None)
+        filename = kwargs.get('filename', None)
         if path:
             if not os.path.exists(path):
-                os.makedirs(path)
-            filename = kwargs.get('filename', None)
-            if not filename:
+                try:
+                    os.makedirs(path)
+                except:
+                    raise ValueError('It\'s not a path')
+            if not str(filename):
                 filename = 'Point'
-            with open(path + '/' + filename + '.geojson', 'w') as outfile:
+            with open(path + '/' + str(filename) + '.geojson', 'w') as outfile:
                 json.dump(data, outfile, indent=4,
                           sort_keys=True, separators=(',', ':'))
         return json.dumps(data)
