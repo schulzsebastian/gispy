@@ -41,6 +41,17 @@ class Point(object):
         return Point(list(transform(in_proj, out_proj, x, y)), self.properties)
 
     def to_geojson(self, **kwargs):
+        path = kwargs.get('path', None)
+        if not path:
+            path = '.'
+        if not os.path.exists(path):
+            try:
+                os.makedirs(path)
+            except:
+                raise ValueError('Path is invalid.')
+        filename = kwargs.get('filename', None)
+        if not str(filename):
+            filename = 'Point'
         data = {
             "type": "FeatureCollection",
             "features": [
@@ -54,20 +65,10 @@ class Point(object):
                 }
             ]
         }
-        path = kwargs.get('path', None)
-        filename = kwargs.get('filename', None)
-        if path:
-            if not os.path.exists(path):
-                try:
-                    os.makedirs(path)
-                except:
-                    raise ValueError('It\'s not a path')
-            if not str(filename):
-                filename = 'Point'
-            with open(path + '/' + str(filename) + '.geojson', 'w') as outfile:
-                json.dump(data, outfile, indent=4,
-                          sort_keys=True, separators=(',', ':'))
-        return json.dumps(data)
+        with open(path + '/' + str(filename) + '.geojson', 'w') as outfile:
+            json.dump(data, outfile, indent=4,
+                      sort_keys=True, separators=(',', ':'))
+        return self
 
     def to_text(self, **kwargs):
         if self.properties:
