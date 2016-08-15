@@ -40,6 +40,22 @@ class Point(object):
         x, y = self.coordinates[0], self.coordinates[1]
         return Point(list(transform(in_proj, out_proj, x, y)), self.properties)
 
+    def as_geojson(self):
+        data = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": self.properties,
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": self.coordinates
+                    }
+                }
+            ]
+        }
+        return json.dumps(data)
+
     def to_geojson(self, **kwargs):
         path = kwargs.get('path', None)
         if not path:
