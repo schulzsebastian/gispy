@@ -99,16 +99,17 @@ class Point(object):
         else:
             data = [_ for _ in self.coordinates]
         path = kwargs.get('path', None)
-        if path:
-            if not os.path.exists(path):
-                os.makedirs(path)
-            filename = kwargs.get('filename', None)
-            if not filename:
-                filename = 'Point'
-            with open(path + '/' + filename + '.csv', 'w') as outfile:
-                writer = csv.writer(outfile, delimiter=';', quotechar='"')
-                writer.writerows(data)
-        return data
+        if not path:
+            path = '.'
+        if not os.path.exists(path):
+            os.makedirs(path)
+        filename = kwargs.get('filename', None)
+        if not filename:
+            filename = 'Point'
+        with open(path + '/' + filename + '.csv', 'w') as outfile:
+            writer = csv.writer(outfile, delimiter=';', quotechar='"')
+            writer.writerows(data)
+        return self
 
     def to_shp(self, **kwargs):
         w = shapefile.Writer(shapefile.POINT)
@@ -117,9 +118,7 @@ class Point(object):
         filename = kwargs.get('filename', None)
         if not filename:
             filename = 'Point'
-        if path:
-            w.save(path + '/' + filename)
-        else:
-            w.save('./' + filename)
-        data = ';'.join([str(_) for _ in self.coordinates])
-        return data
+        if not path:
+            path = '.'
+        w.save(path + '/' + filename)
+        return self
