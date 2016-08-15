@@ -79,15 +79,16 @@ class Point(object):
         else:
             data += ';'.join([str(_) for _ in self.coordinates])
         path = kwargs.get('path', None)
-        if path:
-            if not os.path.exists(path):
-                os.makedirs(path)
-            filename = kwargs.get('filename', None)
-            if not filename:
-                filename = 'Point'
-            with open(path + '/' + filename + '.txt', 'w') as outfile:
-                outfile.write(data)
-        return data
+        if not path:
+            path = '.'
+        if not os.path.exists(path):
+            os.makedirs(path)
+        filename = kwargs.get('filename', None)
+        if not filename:
+            filename = 'Point'
+        with open(path + '/' + filename + '.txt', 'w') as outfile:
+            outfile.write(data)
+        return self
 
     def to_csv(self, **kwargs):
         data = [['coord_x', 'coord_y'], [_ for _ in self.coordinates]]
